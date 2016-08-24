@@ -3,10 +3,16 @@ package sessionOneTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +23,8 @@ import static junit.framework.Assert.assertTrue;
  * Created by alexandru.ivana on 8/10/2016.
  */
 public class SeleniumTest {
+    public static ChromeDriverService service;
+    public WebDriver driver;
 
     @Before
     public void beforeTest() {
@@ -25,8 +33,17 @@ public class SeleniumTest {
     }
 
     @Test
-    public void firstTest() {
-        ChromeDriver driver = new ChromeDriver();
+    public void firstTest() throws IOException {
+        service = new ChromeDriverService.Builder()
+                .usingDriverExecutable(new File(".//src//main//resources//chromedriver"))
+                .usingAnyFreePort()
+                .build();
+
+        service.start();
+
+        driver = new RemoteWebDriver(service.getUrl(),
+                DesiredCapabilities.chrome());
+
         driver.get("http://www.adswizz.com/");
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
